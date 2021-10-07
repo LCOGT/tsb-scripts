@@ -59,7 +59,7 @@ ColNum = 34
 
 # Take copy of the filename, passed in on the command-line
 Filename = sys.argv[ 1 ]
-print "Filename : ", Filename
+print("Filename : ", Filename)
 
 # Open the file and read the line of headings
 File = open( Filename )
@@ -69,11 +69,11 @@ File.close()
 # Determine how many headings have been read
 Heading = Line.split( '\t' )
 Heading = Heading[2:]
-print "Headings :", len( Heading )
+print( "Headings :", len( Heading ))
 
 # Read in the actual data
 Data = numpy.loadtxt( Filename, dtype=float, skiprows=1, usecols=range( 2, ColNum) )
-print "Data read in, row x col", Data.shape, "Size", Data.size, "bytes"
+print( "Data read in, row x col", Data.shape, "Size", Data.size, "bytes")
 
 # Perform a min, max, mean and stdev on the data
 Min = numpy.nanmin( Data, axis=0 )
@@ -83,21 +83,21 @@ Stdev = numpy.std( Data, axis=0 )
 
 # Report some statistics about the position
 Col = ColPos
-print Heading[ Col ],
-print " min : %.3f," % Min[ Col ], " max : %.3f," % Max[ Col ], "mean : %.3f," % Mean[ Col ], "stdev : %.3f," % Stdev[ Col ]
+print(Heading[ Col ],)
+print(" min : %.3f," % Min[ Col ], " max : %.3f," % Max[ Col ], "mean : %.3f," % Mean[ Col ], "stdev : %.3f," % Stdev[ Col ])
 
 # Report some statistics about the velocity
 Col = ColVel
-print Heading[ Col ],
-print " min : %.3f," % Min[ Col ], " max : %.3f," % Max[ Col ], "mean : %.3f," % Mean[ Col ], "stdev : %.3f," % Stdev[ Col ]
+print(Heading[ Col ],)
+print(" min : %.3f," % Min[ Col ], " max : %.3f," % Max[ Col ], "mean : %.3f," % Mean[ Col ], "stdev : %.3f," % Stdev[ Col ])
 
 # Compute the mean RMS over the second half of samples (assume tracking by then)
 MeanRms = numpy.mean( Data[ len( Data ) / 2 : len( Data ) + 1, ColRmsErr ] )
-print "MeanRMS tracking (second half) : %5d (mas)" % MeanRms
+print( "MeanRMS tracking (second half) : %5d (mas)" % MeanRms)
 
 # Compute the mean RMS over the final quarter of samples (must be tracking by then)
 MeanRms = numpy.mean( Data[ len( Data ) / 4 * 3 : len( Data ) + 1, ColRmsErr ] )
-print "MeanRMS tracking (final quarter) : %5d (mas)" % MeanRms
+print( "MeanRMS tracking (final quarter) : %5d (mas)" % MeanRms)
 
 # Write the time axis back into the Data array, as sec+nsec
 ColTime = ColSecs
@@ -141,7 +141,7 @@ for i in range( len( NewData ) ) :
 # Log any changes of state
 for i in range( len( NewData ) ) :
    if ( NewData[ i, ColState ] != NewData[ i - 1, ColState ] ) :
-      print "%3.3f" % NewData[ i, ColSecs ], " : State change %d" % NewData[ i - 1, ColState ], " -> %d" % NewData[ i, ColState ]
+      print("%3.3f" % NewData[ i, ColSecs ], " : State change %d" % NewData[ i - 1, ColState ], " -> %d" % NewData[ i, ColState ])
 
 # Plot a graph of actual, demanded and target osition
 plt.figure( 1, figsize=( 8, 6 ) )
