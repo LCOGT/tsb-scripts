@@ -34,29 +34,28 @@ MSecPerSec = 1000
 
 # Definition of useful columns in AMC log
 ColSecs = 0
-ColNSecs = 1
-ColState = 2
-ColDmdVel = 5
-ColDmdPos = 6
-ColPos = 7
-ColVel = 10
-ColMaxErr = 14
-ColRmsErr = 15
-ColTrackTimeSec = 16
-ColTrackTimeNSec = 17
-ColTgtPos = 18
+ColSecs = 0
+ColState = 21
+ColDmdVel = 3
+ColDmdPos = 4
+ColPos = 5
+ColVel = 8
+ColMaxErr = 12
+ColRmsErr = 13
+ColTrackTimeSec = 14
+ColTrackTimeNSec = 15
+ColTgtPos = 16
+ColMotor1Pos = 6
+ColMotor2Pos = 7
+ColMotor1Vel = 9
+ColMotor2Vel = 10
 
-ColMotor1Pos = 8
-ColMotor2Pos = 9 
-ColMotor1Vel = 11
-ColMotor2Vel = 12
+ColDmdTrq = 29
+ColTrqCor = 17
+ColTrqPre = 18
+ColTrqPost = 19
 
-ColDmdTrq = 4
-ColTrqCor = 19
-ColTrqPre = 20
-ColTrqPost = 21
-
-ColNum = 23
+ColNum = 34
 
 # Take copy of the filename, passed in on the command-line
 Filename = sys.argv[ 1 ]
@@ -69,10 +68,11 @@ File.close()
 
 # Determine how many headings have been read
 Heading = Line.split( '\t' )
+Heading = Heading[2:]
 print "Headings :", len( Heading )
 
 # Read in the actual data
-Data = numpy.loadtxt( Filename, dtype=float, skiprows=1, usecols=range( 0, ColNum + 1 ) )
+Data = numpy.loadtxt( Filename, dtype=float, skiprows=1, usecols=range( 2, ColNum) )
 print "Data read in, row x col", Data.shape, "Size", Data.size, "bytes"
 
 # Perform a min, max, mean and stdev on the data
@@ -101,8 +101,6 @@ print "MeanRMS tracking (final quarter) : %5d (mas)" % MeanRms
 
 # Write the time axis back into the Data array, as sec+nsec
 ColTime = ColSecs
-for i in range( len( Data ) ) :
-   Data[ i, ColTime ] = Data[ i, ColSecs ] + ( Data[ i, ColNSecs ] / NSecPerSec )
 
 # Take a copy of the data
 NewData = numpy.array( Data )
