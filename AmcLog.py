@@ -92,11 +92,11 @@ print(Heading[ Col ],)
 print(" min : %.3f," % Min[ Col ], " max : %.3f," % Max[ Col ], "mean : %.3f," % Mean[ Col ], "stdev : %.3f," % Stdev[ Col ])
 
 # Compute the mean RMS over the second half of samples (assume tracking by then)
-MeanRms = numpy.mean( Data[ len( Data ) / 2 : len( Data ) + 1, ColRmsErr ] )
+MeanRms = numpy.mean( Data[ int(len( Data ) / 2) : len( Data ) + 1, ColRmsErr ] )
 print( "MeanRMS tracking (second half) : %5d (mas)" % MeanRms)
 
 # Compute the mean RMS over the final quarter of samples (must be tracking by then)
-MeanRms = numpy.mean( Data[ len( Data ) / 4 * 3 : len( Data ) + 1, ColRmsErr ] )
+MeanRms = numpy.mean( Data[ int(len( Data ) / 4 * 3) : len( Data ) + 1, ColRmsErr ] )
 print( "MeanRMS tracking (final quarter) : %5d (mas)" % MeanRms)
 
 # Write the time axis back into the Data array, as sec+nsec
