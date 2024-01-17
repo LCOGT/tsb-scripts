@@ -34,7 +34,6 @@ MSecPerSec = 1000
 
 # Definition of useful columns in AMC log
 ColSecs = 0
-ColSecs = 0
 ColState = 21
 ColDmdVel = 3
 ColDmdPos = 4
@@ -55,7 +54,10 @@ ColTrqCor = 17
 ColTrqPre = 18
 ColTrqPost = 19
 
-ColNum = 34
+ColPeriod = 23
+ColLatency = 32
+
+ColNum = 36
 
 # Take copy of the filename, passed in on the command-line
 Filename = sys.argv[ 1 ]
@@ -118,9 +120,6 @@ for i in range( len( Data ) ) :
       Index = StartIndex + i - len( Data )
    NewData[ i ] = Data[ Index ]
 
-# Determine start time, in days elapsed since 1970
-StartTime = matplotlib.dates.epoch2num( round( NewData[ 0, ColSecs ], 0 ) )
-
 # Now remove the time offset
 Offset = NewData[ 0, ColTime ]
 for i in range( len( NewData ) ) :
@@ -143,29 +142,25 @@ for i in range( len( NewData ) ) :
    if ( NewData[ i, ColState ] != NewData[ i - 1, ColState ] ) :
       print("%3.3f" % NewData[ i, ColSecs ], " : State change %d" % NewData[ i - 1, ColState ], " -> %d" % NewData[ i, ColState ])
 
-# Plot a graph of actual, demanded and target osition
+# Plot a graph of actual, demanded and target position
 plt.figure( 1, figsize=( 8, 6 ) )
 plt.plot( NewData[ :, ColTime ], NewData[ :, ColPos ] / MasPerAs,    label=Heading[ ColPos ] )
 plt.plot( NewData[ :, ColTime ], NewData[ :, ColDmdPos ] / MasPerAs, label=Heading[ ColDmdPos ] )
 plt.plot( TrackTime,             NewData[ :, ColTgtPos ] / MasPerAs, label=Heading[ ColTgtPos ] )
 plt.plot( NewData[ :, ColTime ], NewData[ :, ColTgtPos ] / MasPerAs, label="Raw TrackTargetPosition (mas)" )
-plt.title( "%s (%s)" % ( Filename, matplotlib.dates.num2date( StartTime ) ) )
+plt.title( "%s" % ( Filename ) )
 plt.xlabel( "Time (sec)" )
 plt.ylabel( "Position (arcsec)" )
 plt.legend( loc=0 )
-#plt.xlim( 5, 10 )
-#plt.ylim( 0, 100 )
 
 # Plot a graph of actual, demanded velocity
 plt.figure( 2, figsize=( 8, 6 ) )
 plt.plot( NewData[ :, ColTime ], NewData[ :, ColVel ],               label=Heading[ ColVel ] )
 plt.plot( NewData[ :, ColTime ], NewData[ :, ColDmdVel ],            label=Heading[ ColDmdVel ] )
-plt.title( "%s (%s)" % ( Filename, matplotlib.dates.num2date( StartTime ) ) )
+plt.title( "%s" % ( Filename ) )
 plt.xlabel( "Time (sec)" )
 plt.ylabel( "Velocity (arcsec/sec)" )
 plt.legend( loc=0 )
-#plt.xlim( 5, 10 )
-#plt.ylim( -50, 100 )
 
 # Compute the per-cycle position error 
 PosErr = NewData[ :, ColDmdPos ] - NewData[ :, ColPos ]
@@ -174,34 +169,42 @@ plt.figure( 3, figsize=( 8, 6 ) )
 plt.plot( NewData[ :, ColTime ], NewData[ :, ColMaxErr ] / MasPerAs, label=Heading[ ColMaxErr ] )
 plt.plot( NewData[ :, ColTime ], NewData[ :, ColRmsErr ] / MasPerAs, label=Heading[ ColRmsErr ] )
 plt.plot( NewData[ :, ColTime ], PosErr[ : ] / MasPerAs,             label="Position Error" )
-plt.title( "%s (%s)" % ( Filename, matplotlib.dates.num2date( StartTime ) ) )
+plt.title( "%s" % ( Filename ) )
 plt.xlabel( "Time (sec)" )
 plt.ylabel( "Position Error (arcsec)" )
 plt.legend( loc=0 )
-#plt.xlim( 5, 10 )
-#plt.ylim( 0, 999999 )
 
 # Plot the motor positions
 plt.figure( 4, figsize=( 8, 6 ) )
 plt.plot( NewData[ :, ColTime ], NewData[ :, ColMotor1Pos ] / MasPerAs, label=Heading[ ColMotor1Pos ] )
 plt.plot( NewData[ :, ColTime ], NewData[ :, ColMotor2Pos ] / MasPerAs, label=Heading[ ColMotor2Pos ] )
-plt.title( "%s (%s)" % ( Filename, matplotlib.dates.num2date( StartTime ) ) )
+plt.title( "%s" % ( Filename ) )
 plt.xlabel( "Time (sec)" )
 plt.ylabel( "Motor Positions (arcsec)" )
 plt.legend( loc=0 )
-#plt.xlim( 5, 10 )
-#plt.ylim( -100000, 50000 )
 
 # Plot the motor velocities
 plt.figure( 5, figsize=( 8, 6 ) )
 plt.plot( NewData[ :, ColTime ], NewData[ :, ColMotor1Vel ] / MasPerAs, label=Heading[ ColMotor1Vel ] )
 plt.plot( NewData[ :, ColTime ], NewData[ :, ColMotor2Vel ] / MasPerAs, label=Heading[ ColMotor2Vel ] )
-plt.title( "%s (%s)" % ( Filename, matplotlib.dates.num2date( StartTime ) ) )
+plt.title( "%s" % ( Filename ) )
 plt.xlabel( "Time (sec)" )
 plt.ylabel( "Motor Velocities (arcsec)" )
 plt.legend( loc=0 )
-#plt.xlim( 5, 10 )
-#plt.ylim( -200, 100 )
+
+# Plot the latency & Period
+plt.figure( 6, figsize=( 8, 6 ) )
+plt.plot( NewData[ :, ColTime ], NewData[ :, ColPeriod] , label=Heading[ ColPeriod ] )
+plt.title( "%s" % ( Filename ) )
+plt.xlabel( "Time (sec)" )
+plt.ylabel( "Period (ms)" )
+plt.legend( loc=0 )
+plt.figure( 7, figsize=( 8, 6 ) )
+plt.plot( NewData[ :, ColTime ], NewData[ :, ColLatency ] , label=Heading[ ColLatency ] )
+plt.title( "%s" % ( Filename ) )
+plt.xlabel( "Time (sec)" )
+plt.ylabel( "Latency(ms)" )
+plt.legend( loc=0 )
 
 # Display the graphs
 plt.show()
