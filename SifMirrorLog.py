@@ -12,7 +12,7 @@
 #
 
 # Specify whether PMC data (otherwise SIF)
-PMC = 0
+PMC = 1
 
 # Specify which graphs are to be plotted
 GraphLoad    = 1
