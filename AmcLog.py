@@ -57,6 +57,11 @@ ColTrqPost = 19
 ColPeriod = 23
 ColLatency = 32
 
+ColDmdTrq1 = 24
+ColDmdTrq2 = 25
+ColCurTrq1 = 26
+ColCurTrq2 = 27
+
 ColNum = 36
 
 # Take copy of the filename, passed in on the command-line
@@ -187,6 +192,8 @@ plt.legend( loc=0 )
 plt.figure( 5, figsize=( 8, 6 ) )
 plt.plot( NewData[ :, ColTime ], NewData[ :, ColMotor1Vel ] / MasPerAs, label=Heading[ ColMotor1Vel ] )
 plt.plot( NewData[ :, ColTime ], NewData[ :, ColMotor2Vel ] / MasPerAs, label=Heading[ ColMotor2Vel ] )
+plt.plot( NewData[ :, ColTime ], NewData[ :, ColDmdTrq1 ], label=Heading[ ColDmdTrq1 ] )
+plt.plot( NewData[ :, ColTime ], NewData[ :, ColDmdTrq2 ], label=Heading[ ColDmdTrq2 ] )
 plt.title( "%s" % ( Filename ) )
 plt.xlabel( "Time (sec)" )
 plt.ylabel( "Motor Velocities (arcsec)" )
@@ -206,6 +213,17 @@ plt.xlabel( "Time (sec)" )
 plt.ylabel( "Latency(ms)" )
 plt.legend( loc=0 )
 
+
+# Plot the motor velocities
+plt.figure( 8, figsize=( 8, 6 ) )
+plt.plot( NewData[ :, ColTime ], NewData[ :, ColDmdTrq1 ], label=Heading[ ColDmdTrq1 ] , linestyle='None', marker='o')
+plt.plot( NewData[ :, ColTime ], NewData[ :, ColDmdTrq2 ], label=Heading[ ColDmdTrq2 ] , linestyle='None', marker='o')
+plt.plot( NewData[ :, ColTime ], NewData[ :, ColCurTrq1 ], label=Heading[ ColCurTrq1 ] , linestyle='None', marker='o')
+plt.plot( NewData[ :, ColTime ], NewData[ :, ColCurTrq2 ], label=Heading[ ColCurTrq2 ] , linestyle='None', marker='o')
+plt.title( "%s" % ( Filename ) )
+plt.xlabel( "Time (sec)" )
+plt.ylabel( "Motor Torques" )
+plt.legend( loc=0 )
 # Display the graphs
 plt.show()
 
